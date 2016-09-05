@@ -1,0 +1,25 @@
+os:
+  - linux
+  #- osx
+
+language: c
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then curl -o miniconda.sh -L https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh; fi
+  - bash miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda config --set always_yes yes --set changeps1 no
+  - conda update conda
+
+install:
+  - conda create -n fk python=3.5 cython numpy h5py matplotlib
+  - conda install -n fk -c inria-pro-sed waf metis4py geomalgo checkpoint
+  - source activate fk
+  - git clone -b geomalgo --single-branch https://freshkiss3d-ci:$FKCI_PASSWORD@scm.gforge.inria.fr/authscm/freshkiss3d-ci/git/freshkiss3d/freshkiss3d.git
+
+script:
+  - cd freshkiss3d
+  - waf configure
+  - waf build
+  - python examples/simulation/raceway.py
