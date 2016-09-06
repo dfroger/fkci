@@ -22,4 +22,4 @@ script:
   - cd freshkiss3d
   - waf configure
   - waf build
-  - python examples/simulation/raceway.py
+  - python examples/simulation/example_raceway.py
