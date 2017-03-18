@@ -13,13 +13,16 @@ before_install:
   - conda update conda
 
 install:
-  - conda create -n fk python=3.5 cython numpy h5py matplotlib
-  - conda install -n fk -c inria-pro-sed waf metis4py geomalgo checkpoint
+  - conda create -n fk python=3.6 cython numpy scipy h5py matplotlib waf metis geomalgo pyyaml
   - source activate fk
-  - git clone -b cython --single-branch https://freshkiss3d-ci:$FKCI_PASSWORD@scm.gforge.inria.fr/authscm/freshkiss3d-ci/git/freshkiss3d/freshkiss3d.git
+  - conda install sphinx pillow sphinx-gallery sphinx_rtd_theme
+  - pip install sphinxcontrib-napoleon
+  - git clone https://dfroger:$FKCI_PASSWORD@gitlab.inria.fr/freshkiss3d/freshkiss3d.git
 
 script:
   - cd freshkiss3d
   - waf configure
   - waf build
   - python -c 'import freshkiss3d'
+  - cd doc
+  - make html
